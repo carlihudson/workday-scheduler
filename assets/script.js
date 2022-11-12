@@ -57,10 +57,16 @@ function saveEvent(event) {
   console.log(time)
   console.log(note)
   localStorage.setItem(time, note)
-  // console.log("Event!");
+
+  for (i = 0; i < workHours.length; i++) {
+    let eventStorage = localStorage.getItem('hour-' + workHours[i]);
+    let hourTextArea = $('#hour-' + workHours[i] + ' > .description');
+    hourTextArea.textContent = eventStorage;
+ 
 }
 
 
+}
 
  // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
