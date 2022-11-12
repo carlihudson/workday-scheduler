@@ -1,72 +1,46 @@
-var today = dayjs();
-$('#currentDay').text(today.format('dddd, MMMM D'));
-// needs to be updated with display of st, nd, rd, th 
-
-let hourOfDay = dayjs().hour(); 
-
-$(".saveBtn")
-
-
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
-let workHours = [9,10,11,12,13,14,15,16,17]
-
 $(function () {
 
+  // shows the date on the top of the page  
+  var today = dayjs();
+  $('#currentDay').text(today.format('dddd, MMMM D'));
+
+  // saves inputs that the user types in local storage
+  var saveBtn = $(".saveBtn")
+  $(".saveBtn").on('click', function() {
+    var event = $(this).siblings('.description').get(0).value;
+    localStorage.setItem($(this).parent().attr('id'), event);
+  });
+
+  // current hour of the day to compare workHours index to
+  let hourOfDay = dayjs().hour(); 
+
+  // hours inputted as a numeric index
+  let workHours = [9,10,11,12,13,14,15,16,17]
+
+  // keeps written appointments on schedule even if you leave or refresh page
   for (let i = 0; i < workHours.length; i++) {
-    let usaHours = workHours[i];
-    
-    if(workHours[i] >= 12){
-      usaHours = workHours[i] 
-      if(workHours[i] >= 13){
-        usaHours = workHours[i] - 12 
-      }
-    }
-    let row = $("<div class='row time-block'>")
-    
-    let firstCol = $("<div class='col-2 col-md-1 hour text-center py-3'>");
-    firstCol.append(usaHours)
-    
-    let secondCol = $("<textarea class='col-8 col-md-10 description'>");
-
-    let thirdCol = $("<button class='btn saveBtn col-2 col-md-1 fas fa-save'>");
-
-    row.append(firstCol, secondCol, thirdCol)
-    $('#container').append(row)
-
-     if(usaHours < hourOfDay){
-      secondCol.addClass('past')
-    } else if(usaHours === hourOfDay) {
-      secondCol.addClass('present')
-    } else {
-      secondCol.addClass('future')
-    }
-
-    $(".saveBtn").each(function() {
-      $(this).on('click', saveEvent)
-    })
-
+    let storedEvents = localStorage.getItem('hour-' + workHours[i]);
+    let writtenEvent = document.querySelector('#hour-' + workHours[i] + '> .description');
+    writtenEvent.textContent = storedEvents
   }
 
-});
+  for (let i = 0; i < workHours.length; i++) {
+    if(workHours[i] > hourOfDay){
+      $('#hour-' + workHours[i]).addClass('past');
+     } else if(workHours == hourOfDay) {
+      $('#hour-' + workHours[i]).addClass('present');
+      } else {
+      $('#hour-' + workHours[i]).addClass('future');
+      }
+   }
+  } 
+  );
 
-function saveEvent(event) {
-  var time = $(this).siblings("div").text()
-  var note = $(this).siblings("textarea").val()
-  console.log(time)
-  console.log(note)
-  localStorage.setItem(time, note)
 
-  for (i = 0; i < workHours.length; i++) {
-    let eventStorage = localStorage.getItem('hour-' + workHours[i]);
-    let hourTextArea = $('#hour-' + workHours[i] + ' > .description');
-    hourTextArea.textContent = eventStorage;
  
-}
 
 
-}
+// }
 
  // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
