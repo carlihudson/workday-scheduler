@@ -4,6 +4,9 @@ $('#currentDay').text(today.format('dddd, MMMM D'));
 
 let hourOfDay = dayjs().hour(); 
 
+$(".saveBtn")
+
+
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
@@ -40,12 +43,26 @@ $(function () {
       secondCol.addClass('future')
     }
 
+    $(".saveBtn").each(function() {
+      $(this).on('click', saveEvent)
+    })
+
   }
 
-  function saveEvent() {
-    localStorage.setItem('description',)
-  }
-  // TODO: Add a listener for click events on the save button. This code should
+});
+
+function saveEvent(event) {
+  var time = $(this).siblings("div").text()
+  var note = $(this).siblings("textarea").val()
+  console.log(time)
+  console.log(note)
+  localStorage.setItem(time, note)
+  // console.log("Event!");
+}
+
+
+
+ // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
   // function? How can DOM traversal be used to get the "hour-x" id of the
@@ -64,6 +81,3 @@ $(function () {
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
 
-});
-
-thirdCol.addeventlistener('click', saveEvent)
